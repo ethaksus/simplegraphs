@@ -1,11 +1,6 @@
 import unittest
 from simplegraphs.graphs import Vertice, DirectedEdge, UndirectedEdge, Graph
 
-class TestVertices(unittest.TestCase):
-    def test_sample(self):
-        pass
-
-
 class TestEdges(unittest.TestCase):
     def test_undirected_edge(self):
         v1, v2 = Vertice(), Vertice()
@@ -29,7 +24,6 @@ class TestEdges(unittest.TestCase):
         # Test traversal
         self.assertEqual(v1, edge.traverse(v2))
         self.assertEqual(v2, edge.traverse(v1))
-
 
     def test_directed_edge(self):
         v1, v2 = Vertice(), Vertice()
@@ -57,6 +51,21 @@ class TestEdges(unittest.TestCase):
         # Test traversal
         self.assertEqual(v2, edge.traverse())
 
+
+class TestVertices(unittest.TestCase):
+    def test_connect(self):
+        v1, v2, v3 = Vertice(), Vertice(), Vertice()
+
+        # Test undirected connect.
+        v1.connect(v2)
+        self.assertTrue(v1 in v2.neighbors and v1 in v2.incoming)
+        self.assertTrue(v2 in v1.neighbors and v2 in v1.outgoing)
+
+        # Test directed connect.
+        v1.connect(v3, directed=True)
+        self.assertTrue(v1 in v3.incoming and v1 not in v3.outgoing)
+        self.assertTrue(v3 in v1.outgoing and v3 not in v3.incoming)
+        
 
 class TestGraphs(unittest.TestCase):
     def test_sample(self):
