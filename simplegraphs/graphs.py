@@ -152,8 +152,8 @@ class Edge:
             return self._vertice1
 
     def _connect(self, outgoing: Vertice, incoming: Vertice):
-        outgoing.outgoing = incoming
-        incoming.incoming = outgoing
+        outgoing.outgoing.add(incoming)
+        incoming.incoming.add(outgoing)
         outgoing.outgoing_edges.add(self)
         incoming.incoming_edges.add(self)
 
