@@ -11,6 +11,9 @@ class Vertice:
 
     @property
     def neighbors(self):
+        """
+        Set of all neighboring vertices (`set(Vertice)`).
+        """
         return self._neighbors
 
     @neighbors.setter
@@ -19,6 +22,9 @@ class Vertice:
 
     @property
     def incoming(self):
+        """
+        Set of all incoming vertices (`set(Vertice)`).
+        """
         return self._incoming
 
     @incoming.setter
@@ -27,6 +33,9 @@ class Vertice:
 
     @property
     def outgoing(self):
+        """
+        Set of all outgoing vertices (`set(Vertice)`).
+        """
         return self._outgoing
 
     @outgoing.setter
@@ -35,6 +44,9 @@ class Vertice:
 
     @property
     def edges(self):
+        """
+        Set of all connected edges (`set(Edge)`).
+        """
         return self._edges
 
     @edges.setter
@@ -43,6 +55,9 @@ class Vertice:
 
     @property
     def incoming_edges(self):
+        """
+        Set of all incoming edges (`set(Edge)`).
+        """
         return self._incoming_edges
 
     @incoming_edges.setter
@@ -51,6 +66,9 @@ class Vertice:
 
     @property
     def outgoing_edges(self):
+        """
+        Set of all outgoing edges (`set(Edge)`).
+        """
         return self._outgoing_edges
 
     @outgoing_edges.setter
