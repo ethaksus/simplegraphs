@@ -48,7 +48,18 @@ class Edge:
 
 
 class DirectedEdge(Edge):
+    """
+    Directed edge between two vertices.
+    """
     def __init__(self, outgoing: Vertice, incoming: Vertice, weight: int=0):
+        """
+        Create a new directed edge between two vertices.
+
+        :param outgoing Vertice: Outgoing vertice.
+        :param incoming Vertice: Incoming vertice.
+        :returns: Directed edge between outgoing and incoming vertices.
+        :rtype: DirectedEdge
+        """
         Edge.__init__(self, outgoing, incoming)
         self.outgoing = outgoing
         self.incoming = incoming
@@ -59,7 +70,17 @@ class DirectedEdge(Edge):
 
 
 class UndirectedEdge(Edge):
+    """
+    Undirected edge between two vertices.
+    """
     def __init__(self, vertice1: Vertice, vertice2: Vertice, weight: int=0):
+        """
+        Create a new undirected edge between two vertices.
+        :param vertice1 Vertice: Vertice of edge.
+        :param vertice2 Vertice: Vertice of edge.
+        :returns: Undirected edge between vertice1 and vertice2.
+        :rtype: UndirectedEdge
+        """
         Edge.__init__(self, vertice1, vertice2)
         self._connect(vertice1, vertice2)
         self._connect(vertice2, vertice1)
