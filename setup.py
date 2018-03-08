@@ -1,8 +1,8 @@
 from setuptools import setup
 
 setup(name='simplegraphs',
-      version='0.1',
-      description='Simple tools for building and analyzing graphs',
+      version='0.2.0',
+      description='A python library providing tools for building and analyzing graphs',
       url='https://github.com/DamourYouKnow/simplegraphs',
       author='DamourYouKnow',
       author_email='damourba@gmail.com',
