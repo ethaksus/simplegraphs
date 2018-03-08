@@ -98,6 +98,9 @@ class Vertice:
     def __iter__(self) -> Iterator['Vertice']:
         return _BreadthFirstIterator(self)
 
+    def dfs(self) -> Iterator['Vertice']:
+        return _BreadthFirstIterator(self)
+
     def bfs(self) -> Iterator['Vertice']:
         return _DepthFirstIterator(self)
         
@@ -170,10 +173,24 @@ class DirectedEdge(Edge):
         :returns: Directed edge between outgoing and incoming vertices.
         :rtype: DirectedEdge
         """
-        Edge.__init__(self, outgoing, incoming)
-        self.outgoing = outgoing
-        self.incoming = incoming
+        Edge.__init__(self, outgoing, incoming, weight)
+        self._outgoing = outgoing
+        self._incoming = incoming
         self._connect(outgoing, incoming)
+
+    @property
+    def outgoing(self) -> Vertice:
+        """
+        Outgoing vertice of directed edge.
+        """
+        return self._outgoing
+
+    @property
+    def incoming(self) -> Vertice:
+        """
+        Incoming vertice of directed edge.
+        """
+        return self._incoming
 
     def traverse(self) -> Vertice:
         """
@@ -200,7 +217,7 @@ class UndirectedEdge(Edge):
         :returns: Undirected edge between vertice1 and vertice2.
         :rtype: UndirectedEdge
         """
-        Edge.__init__(self, vertice1, vertice2)
+        Edge.__init__(self, vertice1, vertice2, weight)
         self._connect(vertice1, vertice2)
         self._connect(vertice2, vertice1)
 
