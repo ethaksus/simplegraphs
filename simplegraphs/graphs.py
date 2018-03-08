@@ -17,6 +17,7 @@ class Vertice:
         self._edges = set()
         self._incoming_edges = set()
         self._outgoing_edges = set()
+        self._edge_to_vertice = {}
 
     @property
     def label(self) -> str:
@@ -59,7 +60,7 @@ class Vertice:
         return self._outgoing
 
     @outgoing.setter
-    def outgoing(self, value: Set['Edge']):
+    def outgoing(self, value: Set['Vertice']):
         self._outgoing = value
 
     @property
@@ -110,6 +111,11 @@ class Vertice:
         else:
             UndirectedEdge(self, other, weight)
 
+    def disconnect(self, other: 'Vertice'):
+        if other not in self._neighbors:
+            raise ValueError('Other vertice not connected to this vertice.')
+        self._edge_to_vertice[other].disconnect()
+
 
 class Edge:
     """
@@ -125,6 +131,9 @@ class Edge:
         vertice2.neighbors.add(vertice1)
         vertice1.edges.add(self)
         vertice2.edges.add(self)
+
+        vertice1._edge_to_vertice[vertice2] = self
+        vertice2._edge_to_vertice[vertice1] = self
         
     @property
     def weight(self) -> float:
@@ -150,6 +159,18 @@ class Edge:
             return self._vertice2
         elif origin == self._vertice2:
             return self._vertice1
+
+    def disconnect(self):
+        self._vertice1.neighbors.discard()
+        self._vertice1.outgoing.discard()
+        self._vertice1.incoming.discard()
+        self._vertice1._edge_to_vertice.pop(self._vertice2, None)
+
+        self._vertice2.neighbors.discard()
+        self._vertice2.outgoing.discard()
+        self._vertice2.incoming.discard()
+        self._vertice2._edge_to_vertice.pop(self._vertice1, None)
+
 
     def _connect(self, outgoing: Vertice, incoming: Vertice):
         outgoing.outgoing.add(incoming)
