@@ -3,6 +3,9 @@ from abc import ABC, abstractmethod
 class Vertice:
     def __init__(self):
         self.edges = set()
+        self.incoming_edges = set()
+        self.outgoing_edges = set()
+        self.neighbors = set()
         self.incoming = set()
         self.outgoing = set()
 
@@ -13,17 +16,10 @@ class Vertice:
         return _DepthFirstIterator(self)
         
     def connect(self, other: Vertice, directed: bool=False, weight: int=0):
-        edge = None
         if directed:
-            edge = DirectedEdge(self, other, weight)
+            DirectedEdge(self, other, weight)
         else:
-            edge = UndirectedEdge(self, other, weight)
-            self.incoming.add(edge)
-        
-        self.edges.add(edge)
-        self.outgoing.add(edge)
-        other.edges.add(edge)
-        other.incoming.add(edge)
+            UndirectedEdge(self, other, weight)
 
 
 class Edge:
@@ -32,6 +28,11 @@ class Edge:
         self._vertice2 = vertice2
         self.weight = weight
 
+        vertice1.neighbors.add(vertice2)
+        vertice2.neighbors.add(vertice1)
+        vertice1.edges.add(self)
+        vertice2.edges.add(self)
+
     @abstractmethod
     def traverse(self, origin: Vertice) -> Vertice:
         if origin == self._vertice1:
@@ -39,12 +40,19 @@ class Edge:
         elif origin == self._vertice2:
             return self._vertice1
 
+    def _connect(self, outgoing: Vertice, incoming: Vertice):
+        outgoing.outgoing = incoming
+        incoming.incoming = outgoing
+        outgoing.outgoing_edges.add(self)
+        incoming.incoming_edges.add(self)
+
 
 class DirectedEdge(Edge):
     def __init__(self, outgoing: Vertice, incoming: Vertice, weight: int=0):
         Edge.__init__(self, outgoing, incoming)
         self.outgoing = outgoing
         self.incoming = incoming
+        self._connect(outgoing, incoming)
 
     def traverse(self) -> Vertice:
         return self.incoming
@@ -53,6 +61,8 @@ class DirectedEdge(Edge):
 class UndirectedEdge(Edge):
     def __init__(self, vertice1: Vertice, vertice2: Vertice, weight: int=0):
         Edge.__init__(self, vertice1, vertice2)
+        self._connect(vertice1, vertice2)
+        self._connect(vertice2, vertice1)
 
     def traverse(self, origin: Vertice) -> Vertice:
         return super().traverse(origin)
