@@ -2,12 +2,60 @@ from abc import ABC, abstractmethod
 
 class Vertice:
     def __init__(self):
-        self.edges = set()
-        self.incoming_edges = set()
-        self.outgoing_edges = set()
-        self.neighbors = set()
-        self.incoming = set()
-        self.outgoing = set()
+        self._neighbors = set()
+        self._incoming = set()
+        self._outgoing = set()
+        self._edges = set()
+        self._incoming_edges = set()
+        self._outgoing_edges = set()
+
+    @property
+    def neighbors(self):
+        return self._neighbors
+
+    @neighbors.setter
+    def neighbors(self, value):
+        self._neighbors = value
+
+    @property
+    def incoming(self):
+        return self._incoming
+
+    @incoming.setter
+    def incoming(self, value):
+        self._incoming = value
+
+    @property
+    def outgoing(self):
+        return self._outgoing
+
+    @outgoing.setter
+    def outgoing(self, value):
+        self._outgoing = value
+
+    @property
+    def edges(self):
+        return self._edges
+
+    @edges.setter
+    def edges(self, value):
+        self._edges = value
+
+    @property
+    def incoming_edges(self):
+        return self._incoming_edges
+
+    @incoming_edges.setter
+    def incoming_edges(self, value):
+        self._incoming_edges = value
+
+    @property
+    def outgoing_edges(self):
+        return self._outgoing_edges
+
+    @outgoing_edges.setter
+    def outgoing_edges(self, value):
+        self._outgoing_edges = value
 
     def __iter__(self):
         return _BreadthFirstIterator(self)
