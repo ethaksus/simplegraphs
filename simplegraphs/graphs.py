@@ -30,78 +30,78 @@ class Vertice:
         self._label = value
 
     @property
-    def neighbors(self) -> Set[Vertice]:
+    def neighbors(self) -> Set['Vertice']:
         """
         Set of all neighboring vertices (`Set[Vertice]`).
         """
         return self._neighbors
 
     @neighbors.setter
-    def neighbors(self, value: Set[Vertice]):
+    def neighbors(self, value: Set['Vertice']):
         self._neighbors = value
 
     @property
-    def incoming(self) -> Set[Vertice]:
+    def incoming(self) -> Set['Vertice']:
         """
         Set of all incoming vertices (`Set[Vertice]`).
         """
         return self._incoming
 
     @incoming.setter
-    def incoming(self, value: Set[Vertice]):
+    def incoming(self, value: Set['Vertice']):
         self._incoming = value
 
     @property
-    def outgoing(self) -> Set[Vertice]:
+    def outgoing(self) -> Set['Vertice']:
         """
         Set of all outgoing vertices (`Set[Vertice]`).
         """
         return self._outgoing
 
     @outgoing.setter
-    def outgoing(self, value: Set[Edge]):
+    def outgoing(self, value: Set['Edge']):
         self._outgoing = value
 
     @property
-    def edges(self) -> Set[Edge]:
+    def edges(self) -> Set['Edge']:
         """
         Set of all connected edges (`Set[Edge]`).
         """
         return self._edges
 
     @edges.setter
-    def edges(self, value: Set[Edge]):
+    def edges(self, value: Set['Edge']):
         self._edges = value
 
     @property
-    def incoming_edges(self) -> Set[Edge]:
+    def incoming_edges(self) -> Set['Edge']:
         """
         Set of all incoming edges (`Set[Edge]`).
         """
         return self._incoming_edges
 
     @incoming_edges.setter
-    def incoming_edges(self, value: Set[Edge]):
+    def incoming_edges(self, value: Set['Edge']):
         self._incoming_edges = value
 
     @property
-    def outgoing_edges(self) -> Set[Edge]:
+    def outgoing_edges(self) -> Set['Edge']:
         """
         Set of all outgoing edges (`Set[Edge]`).
         """
         return self._outgoing_edges
 
     @outgoing_edges.setter
-    def outgoing_edges(self, value: Set[Edge]):
+    def outgoing_edges(self, value: Set['Edge']):
         self._outgoing_edges = value
 
-    def __iter__(self) -> Iterator[Vertice]:
+    def __iter__(self) -> Iterator['Vertice']:
         return _BreadthFirstIterator(self)
 
-    def bfs(self) -> Iterator[Vertice]:
+    def bfs(self) -> Iterator['Vertice']:
         return _DepthFirstIterator(self)
         
-    def connect(self, other: Vertice, directed: bool=False, weight: int=0):
+    def connect(self, other: 'Vertice', directed: bool=False, weight: int=0):
         if directed:
             DirectedEdge(self, other, weight)
         else:
@@ -113,7 +113,7 @@ class Edge:
     Edge between two vertices.
     """
     def __init__(self, vertice1: Vertice, vertice2: Vertice, 
-                 weight: float=0) -> Edge:
+                 weight: float=0) -> 'Edge':
         self._vertice1 = vertice1
         self._vertice2 = vertice2
         self._weight = weight
@@ -160,7 +160,7 @@ class DirectedEdge(Edge):
     Directed edge between two vertices.
     """
     def __init__(self, outgoing: Vertice, incoming: Vertice, 
-                 weight: float=0) -> DirectedEdge:
+                 weight: float=0) -> 'DirectedEdge':
         """
         Create a new directed edge between two vertices.
 
@@ -189,7 +189,8 @@ class UndirectedEdge(Edge):
     """
     Undirected edge between two vertices.
     """
-    def __init__(self, vertice1: Vertice, vertice2: Vertice, weight: int=0):
+    def __init__(self, vertice1: Vertice, vertice2: Vertice,
+                 weight: int=0) -> 'UndirectedEdge':
         """
         Create a new undirected edge between two vertices.
 
@@ -215,7 +216,7 @@ class UndirectedEdge(Edge):
 
 
 class _BreadthFirstIterator():
-    def __init__(self, origin: Vertice) -> _BreadthFirstIterator:
+    def __init__(self, origin: Vertice) -> '_BreadthFirstIterator':
         self._stack = [origin]
 
     def __iter__(self) -> Iterator[Vertice]:
@@ -230,7 +231,7 @@ class _BreadthFirstIterator():
 
 
 class _DepthFirstIterator():
-    def __init__(self, origin: Vertice) -> _DepthFirstIterator:
+    def __init__(self, origin: Vertice) -> '_DepthFirstIterator':
         self._queue = [origin]
 
     def __iter__(self) -> Iterator[Vertice]:
