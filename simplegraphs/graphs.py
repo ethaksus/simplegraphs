@@ -3,24 +3,21 @@ from abc import ABC, abstractmethod
 class Vertice:
     def __init__(self):
         self.edges = set()
-
-    def neighbors(self):
-        return {edge.traverse() for edge in self.edges}
-
-    def incoming_edges(self):
-        raise NotImplementedError
-
-    def outgoing_edges(self):
-        raise NotImplementedError
-
+        self.incoming = set()
+        self.outgoing = set()
+        
     def connect(self, other: Vertice, directed: bool=False, weight: int=0):
         edge = None
         if directed:
             edge = DirectedEdge(self, other, weight)
         else:
             edge = UndirectedEdge(self, other, weight)
+            self.incoming.add(edge)
+        
         self.edges.add(edge)
+        self.outgoing.add(edge)
         other.edges.add(edge)
+        other.incoming.add(edge)
 
 
 class Edge:
