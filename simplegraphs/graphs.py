@@ -5,6 +5,12 @@ class Vertice:
         self.edges = set()
         self.incoming = set()
         self.outgoing = set()
+
+    def __iter__(self):
+        return _BreadthFirstIterator(self)
+
+    def bfs(self):
+        return _DepthFirstIterator(self)
         
     def connect(self, other: Vertice, directed: bool=False, weight: int=0):
         edge = None
@@ -52,9 +58,45 @@ class UndirectedEdge(Edge):
         return super().traverse(origin)
 
 
+class _BreadthFirstIterator():
+    def __init__(self, origin: Vertice):
+        self._stack = [origin]
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        if not self._stack:
+            raise StopIteration
+        next_vertice = self._stack.pop()
+        self._stack += next_vertice.outgoing
+        return next_vertice
+
+
+class _DepthFirstIterator():
+    def __init__(self, origin: Vertice):
+        self._queue = [origin]
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        if not self._queue:
+            raise StopIteration
+        next_vertice = self._queue.pop(0)
+        self._queue += next_vertice.outgoing
+        return next_vertice
+
+
 class Graph:
     def __init__(self):
         self.vertices = set()
+
+    def dfs(self, origin: Vertice):
+        return _DepthFirstIterator(origin)
+
+    def bfs(self, origin: Vertice):
+        return _BreadthFirstIterator(origin)        
 
     def edge_set(self):
         raise NotImplementedError
