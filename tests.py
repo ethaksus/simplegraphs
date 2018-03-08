@@ -27,8 +27,8 @@ class TestEdges(unittest.TestCase):
         self.assertTrue(edge in v2.incoming_edges)  
 
         # Test traversal
-        self.assertEquals(v1, edge.traverse(v2))
-        self.assertEquals(v2, edge.traverse(v1))
+        self.assertEqual(v1, edge.traverse(v2))
+        self.assertEqual(v2, edge.traverse(v1))
 
 
     def test_directed_edge(self):
@@ -55,7 +55,7 @@ class TestEdges(unittest.TestCase):
         self.assertTrue(edge in v2.incoming_edges)  
 
         # Test traversal
-        self.assertEquals(v2, edge.traverse())
+        self.assertEqual(v2, edge.traverse())
 
 
 class TestGraphs(unittest.TestCase):
