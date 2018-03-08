@@ -1,13 +1,33 @@
 from abc import ABC, abstractmethod
+from typing import Dict, List, Set, Iterable, Iterator
 
 class Vertice:
-    def __init__(self):
+    def __init__(self, label: str=None) -> 'Vertice':
+        """
+        Create a new vertice.
+
+        :param label str: Label of vertice.
+        :returns: New vertice.
+        :rtype: Vertice
+        """
+        self._label = str
         self._neighbors = set()
         self._incoming = set()
         self._outgoing = set()
         self._edges = set()
         self._incoming_edges = set()
         self._outgoing_edges = set()
+
+    @property
+    def label(self) -> str:
+        """
+        Label of vertice (`str`).
+        """
+        return self._label
+
+    @label.setter
+    def label(self, value: str):
+        self._label = value
 
     @property
     def neighbors(self) -> Set[Vertice]:
@@ -75,10 +95,10 @@ class Vertice:
     def outgoing_edges(self, value: Set[Edge]):
         self._outgoing_edges = value
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[Vertice]:
         return _BreadthFirstIterator(self)
 
-    def bfs(self):
+    def bfs(self) -> Iterator[Vertice]:
         return _DepthFirstIterator(self)
         
     def connect(self, other: Vertice, directed: bool=False, weight: int=0):
@@ -89,18 +109,40 @@ class Vertice:
 
 
 class Edge:
-    def __init__(self, vertice1: Vertice, vertice2: Vertice, weight: int=0) -> Edge:
+    """
+    Edge between two vertices.
+    """
+    def __init__(self, vertice1: Vertice, vertice2: Vertice, 
+                 weight: float=0) -> Edge:
         self._vertice1 = vertice1
         self._vertice2 = vertice2
-        self.weight = weight
+        self._weight = weight
 
         vertice1.neighbors.add(vertice2)
         vertice2.neighbors.add(vertice1)
         vertice1.edges.add(self)
         vertice2.edges.add(self)
+        
+    @property
+    def weight(self) -> float:
+        """
+        Cost of traversing edge (`float`).
+        """
+        return self._weight
+
+    @weight.setter
+    def weight(self, value: float):
+        self._weight = value
 
     @abstractmethod
     def traverse(self, origin: Vertice) -> Vertice:
+        """
+        Traverse from one vertice in an edge to the other.
+
+        :param origin Vertice: Starting vertice of traversal.
+        :returns: Opposing vertice from origin.
+        :rtype: Vertice
+        """
         if origin == self._vertice1:
             return self._vertice2
         elif origin == self._vertice2:
@@ -118,12 +160,13 @@ class DirectedEdge(Edge):
     Directed edge between two vertices.
     """
     def __init__(self, outgoing: Vertice, incoming: Vertice, 
-                 weight: int=0) -> DirectedEdge:
+                 weight: float=0) -> DirectedEdge:
         """
         Create a new directed edge between two vertices.
 
         :param outgoing Vertice: Outgoing vertice.
         :param incoming Vertice: Incoming vertice.
+        :param weight float: Cost of travering edge.
         :returns: Directed edge between outgoing and incoming vertices.
         :rtype: DirectedEdge
         """
@@ -133,6 +176,12 @@ class DirectedEdge(Edge):
         self._connect(outgoing, incoming)
 
     def traverse(self) -> Vertice:
+        """
+        Traverse to the incoming vertice of a directed edge.
+
+        :returns: Incoming vertice of edge.
+        :rtype: Vertice
+        """
         return self.incoming
 
 
@@ -143,8 +192,10 @@ class UndirectedEdge(Edge):
     def __init__(self, vertice1: Vertice, vertice2: Vertice, weight: int=0):
         """
         Create a new undirected edge between two vertices.
+
         :param vertice1 Vertice: Vertice of edge.
         :param vertice2 Vertice: Vertice of edge.
+        :param weight float: Cost of travering edge.
         :returns: Undirected edge between vertice1 and vertice2.
         :rtype: UndirectedEdge
         """
@@ -153,17 +204,24 @@ class UndirectedEdge(Edge):
         self._connect(vertice2, vertice1)
 
     def traverse(self, origin: Vertice) -> Vertice:
+        """
+        Traverse from one vertice in an edge to the other.
+
+        :param origin Vertice: Starting vertice of traversal.
+        :returns: Opposing vertice from origin.
+        :rtype: Vertice
+        """
         return super().traverse(origin)
 
 
 class _BreadthFirstIterator():
-    def __init__(self, origin: Vertice):
+    def __init__(self, origin: Vertice) -> _BreadthFirstIterator:
         self._stack = [origin]
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[Vertice]:
         return self
 
-    def __next__(self):
+    def __next__(self) -> Vertice:
         if not self._stack:
             raise StopIteration
         next_vertice = self._stack.pop()
@@ -172,13 +230,13 @@ class _BreadthFirstIterator():
 
 
 class _DepthFirstIterator():
-    def __init__(self, origin: Vertice):
+    def __init__(self, origin: Vertice) -> _DepthFirstIterator:
         self._queue = [origin]
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[Vertice]:
         return self
 
-    def __next__(self):
+    def __next__(self) -> Vertice:
         if not self._queue:
             raise StopIteration
         next_vertice = self._queue.pop(0)
@@ -188,19 +246,19 @@ class _DepthFirstIterator():
 
 class Graph:
     def __init__(self):
-        self.vertices = set()
+        self._vertices = set()
 
-    def dfs(self, origin: Vertice):
+    def dfs(self, origin: Vertice) -> Iterable[Vertice]:
         return _DepthFirstIterator(origin)
 
-    def bfs(self, origin: Vertice):
+    def bfs(self, origin: Vertice) -> Iterable[Vertice]:
         return _BreadthFirstIterator(origin)        
 
-    def edge_set(self):
+    def edge_set(self) -> Set[Edge]:
         raise NotImplementedError
 
     def add_vertice(self, vertice: Vertice):
-        self.vertices.add(vertice)
+        self._vertices.add(vertice)
 
     def connect(self, vertice1: Vertice, vertice2: Vertice, 
                 directed: bool=False, weight: int=0):
