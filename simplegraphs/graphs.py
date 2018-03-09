@@ -10,7 +10,7 @@ class Vertice:
         :returns: New vertice.
         :rtype: Vertice
         """
-        self._label = str
+        self._label = label
         self._neighbors = set()
         self._incoming = set()
         self._outgoing = set()
@@ -109,10 +109,10 @@ class Vertice:
         """
         return self._edge_to_vertice[other]
 
-    def dfs(self) -> Iterator['Vertice']:
+    def bfs(self) -> Iterator['Vertice']:
         return _BreadthFirstIterator(self)
 
-    def bfs(self) -> Iterator['Vertice']:
+    def dfs(self) -> Iterator['Vertice']:
         return _DepthFirstIterator(self)
         
     def connect(self, other: 'Vertice', directed: bool=False, weight: int=0):
@@ -262,23 +262,9 @@ class UndirectedEdge(Edge):
 
 
 class _BreadthFirstIterator():
-    def __init__(self, origin: Vertice) -> '_BreadthFirstIterator':
-        self._stack = [origin]
-
-    def __iter__(self) -> Iterator[Vertice]:
-        return self
-
-    def __next__(self) -> Vertice:
-        if not self._stack:
-            raise StopIteration
-        next_vertice = self._stack.pop()
-        self._stack += next_vertice.outgoing
-        return next_vertice
-
-
-class _DepthFirstIterator():
     def __init__(self, origin: Vertice) -> '_DepthFirstIterator':
         self._queue = [origin]
+        self._visited = set()
 
     def __iter__(self) -> Iterator[Vertice]:
         return self
@@ -286,20 +272,38 @@ class _DepthFirstIterator():
     def __next__(self) -> Vertice:
         if not self._queue:
             raise StopIteration
-        next_vertice = self._queue.pop(0)
-        self._queue += next_vertice.outgoing
-        return next_vertice
+        next = self._queue.pop(0)
+        self._visited.add(next)
+        self._queue += {v for v in next.outgoing if v not in self._visited}
+        return next
+
+
+class _DepthFirstIterator():
+    def __init__(self, origin: Vertice) -> '_BreadthFirstIterator':
+        self._stack = [origin]
+        self._visited = set()
+
+    def __iter__(self) -> Iterator[Vertice]:
+        return self
+
+    def __next__(self) -> Vertice:
+        if not self._stack:
+            raise StopIteration
+        next = self._stack.pop()
+        self._visited.add(next)
+        self._stack += {v for v in next.outgoing if v not in self._visited}
+        return next
 
 
 class Graph:
     def __init__(self):
         self._vertices = set()
 
-    def dfs(self, origin: Vertice) -> Iterable[Vertice]:
-        return _DepthFirstIterator(origin)
-
     def bfs(self, origin: Vertice) -> Iterable[Vertice]:
         return _BreadthFirstIterator(origin)        
+
+    def dfs(self, origin: Vertice) -> Iterable[Vertice]:
+        return _DepthFirstIterator(origin)
 
     def edge_set(self) -> Set[Edge]:
         raise NotImplementedError

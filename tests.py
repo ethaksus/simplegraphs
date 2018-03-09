@@ -75,6 +75,36 @@ class TestVertices(unittest.TestCase):
         self.assertTrue(v3 in v1.outgoing and v3 not in v3.incoming)
         
 
+class TestIterators(unittest.TestCase):
+    def test_breadth_first(self):
+        root = Vertice('A')
+        v1, v2, v3 = Vertice('B'), Vertice('C'), Vertice('D')
+        last = Vertice('E')
+
+        root.connect(v1)
+        root.connect(v2)
+        root.connect(v3)
+        v1.connect(last)
+
+        bfs = [v for v in root.bfs()]
+        self.assertEqual(5, len(bfs))
+        self.assertEqual(last, bfs[-1])
+
+    def test_depth_first(self):
+        root = Vertice('A')
+        v1, v2, v3, v4 = Vertice('B'), Vertice('C'), Vertice('D'), Vertice('E')
+
+        root.connect(v1)
+        root.connect(v2)
+        v1.connect(v3)
+        v2.connect(v4)
+
+        labels = [v.label for v in root.dfs()]
+        valid1 = labels == ['A', 'B', 'D', 'C', 'E']
+        valid2 = labels == ['A', 'C', 'E', 'B', 'D']
+        self.assertTrue(valid1 or valid2)
+
+
 class TestGraphs(unittest.TestCase):
     def test_sample(self):
         pass
