@@ -99,6 +99,16 @@ class Vertice:
     def __iter__(self) -> Iterator['Vertice']:
         return _BreadthFirstIterator(self)
 
+    def edge(self, other: 'Vertice') -> 'Edge':
+        """
+        Returns edge connecting this vertice to another vertice.
+
+        :param other Vertice: Other vertice.
+        :returns: Connecting edge
+        :rtype: Edge
+        """
+        return self._edge_to_vertice[other]
+
     def dfs(self) -> Iterator['Vertice']:
         return _BreadthFirstIterator(self)
 
@@ -112,8 +122,6 @@ class Vertice:
             UndirectedEdge(self, other, weight)
 
     def disconnect(self, other: 'Vertice'):
-        if other not in self._neighbors:
-            raise ValueError('Other vertice not connected to this vertice.')
         self._edge_to_vertice[other].disconnect()
 
 

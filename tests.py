@@ -25,6 +25,10 @@ class TestEdges(unittest.TestCase):
         self.assertEqual(v1, edge.traverse(v2))
         self.assertEqual(v2, edge.traverse(v1))
 
+        # Test edge mapping
+        self.assertEqual(edge, v1.edge(v2))
+        self.assertEqual(edge, v2.edge(v1))
+
     def test_directed_edge(self):
         v1, v2 = Vertice(), Vertice()
         edge = DirectedEdge(v1, v2)
@@ -50,6 +54,10 @@ class TestEdges(unittest.TestCase):
 
         # Test traversal
         self.assertEqual(v2, edge.traverse())
+
+        # Test edge mapping
+        self.assertEqual(edge, v1.edge(v2))
+        self.assertEqual(edge, v2.edge(v1))
 
 
 class TestVertices(unittest.TestCase):
